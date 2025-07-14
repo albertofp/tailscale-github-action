@@ -56,6 +56,10 @@ inputs:
     description: 'Whether to cache the Tailscale binaries (Linux/macOS) or installer (Windows)'
     required: false
     default: 'false'
+  verbose:
+    description: 'Whether to print verbose output'
+    required: false
+    default: 'false'
 runs:
     using: 'composite'
     steps:
@@ -285,7 +289,11 @@ runs:
             STATE_ARGS="--statedir=${STATEDIR}"
             mkdir -p "$STATEDIR"
           fi
-          sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} 2>~/tailscaled.log &
+          if [ "${{ inputs.verbose }}" == "true" ]; then
+            sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} &
+          else
+            sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} 2>~/tailscaled.log &
+          fi
           # And check that tailscaled came up. The CLI will block for a bit waiting
           # for it. And --json will make it exit with status 0 even if we're logged
           # out (as we will be). Without --json it returns an error if we're not up.
