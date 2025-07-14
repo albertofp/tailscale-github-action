@@ -290,9 +290,9 @@ runs:
             mkdir -p "$STATEDIR"
           fi
           if [ "${{ inputs.verbose }}" == "true" ]; then
-            sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} &
+            sudo -E tailscaled --tun=userspace-networking ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} &
           else
-            sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} 2>~/tailscaled.log &
+            sudo -E tailscaled --tun=userspace-networking ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} 2>~/tailscaled.log &
           fi
           # And check that tailscaled came up. The CLI will block for a bit waiting
           # for it. And --json will make it exit with status 0 even if we're logged
